@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/script.js"></script>
+</head>
+
+<body>
+    <!-- nav bar -->
+    {% with dashboard="text-indigo-500 font-semibold" %}
+    {% include 'components/header.html' %}
+    {% endwith %}
+
+    <!-- table -->
+    <section class="text-gray-600 body-font">
+        <div class="container px-5 py-10 lg:py-24 mx-auto">
+            <div class="flex flex-col text-center w-full mb-10">
+                <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">Dashboard</h1>
+
+            </div>
+            <select class="mx-auto px-8 py-2 mb-4 font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl"
+                name="changeStatus" id="changeStatus" onchange="changeStatus()">
+                <option value="0">Under Review</option>
+                <option value="1">Aprroved</option>
+                <option value="-1">Rejected</option>
+            </select>
+            <div class="lg:w-full w-full mx-auto overflow-auto">
+
+                <table class="table-auto w-full text-left whitespace-no-wrap">
+
+                    <thead>
+                        <tr>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
+                                Id</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Name</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Email</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Phone</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Aadhar no</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Station</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Complaint</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                token</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Approve</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Reject</th>
+                            <th
+                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                Submit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in data %}
+                        <tr class="complain" data-status="{{c.status}}">
+                            <td class="px-4 py-3">{{c.id}}</td>
+                            <td class="px-4 py-3">{{c.name}}</td>
+                            <td class="px-4 py-3">{{c.email}}</td>
+                            <td class="px-4 py-3">{{c.phone}}</td>
+                            <td class="px-4 py-3">{{c.aadhar}}</td>
+                            <td class="px-4 py-3">{{c.station}}</td>
+                            <td class="px-4 py-3">{{c.complain}}</td>
+                            <td class="px-4 py-3">{{c.token}}</td>
+                            <td class="w-10 text-center">
+                                <input name="status" value="1" type="radio">
+                            </td>
+                            <td class="w-10 text-center">
+                                <input name="status" value="-1" type="radio">
+                            </td>
+                            <td class="w-10 text-center">
+                                <button onclick="update('{{c.token}}')"
+                                    class="inline-flex text-white bg-indigo-500 border-0 py-1 px-3 focus:outline-none hover:bg-indigo-600 rounded text-md">Submit</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+    <script>
+        function update(token) {
+            let status = document.querySelector('input[name="status"]:checked').value;
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                location.reload()
+                console.log("Worked")
+            }
+            xhttp.open("GET", `updatestatus?token=${token}&status=${status}`);
+            xhttp.send();
+        }
+        changeStatus()
+        function changeStatus() {
+            let value = document.getElementById("changeStatus").value
+            let complains = document.getElementsByClassName("complain")
+            for (let i = 0; i < complains.length; i++) {
+                if (complains[i].getAttribute("data-status") !== value) {
+                    complains[i].style.display = "none"
+                }
+                else {
+                    complains[i].style.display = "table-row"
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
